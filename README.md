@@ -82,7 +82,11 @@ final-check/
 ├── SKILL.md              Agent instructions and version metadata
 ├── agents/openai.yaml    Display metadata and suggested invocation
 ├── README.md             Human-facing usage and installation guide
-└── tests/scenarios.md    Behavioral review cases and acceptance criteria
+└── tests/
+    ├── scenarios.md         Behavioral cases and acceptance criteria
+    ├── create_fixtures.py   Isolated fictional inputs and baseline checks
+    ├── audit_run.py         Post-run file and test-count audit
+    └── results/             Dated observations and evaluation reports
 ```
 
 ## Boundaries
@@ -96,6 +100,10 @@ final-check/
 ## Evaluation
 
 [Behavioral scenarios](tests/scenarios.md) cover clean reviews, stale evidence, critical unknowns, review-only boundaries, authorized repairs, and changing requirements. They are reusable evaluation fixtures, not a claim of benchmark performance.
+
+**2026-10-19 acceptance run: 11/11 scenarios met the criteria.** Three fresh-context subagents reviewed grouped local fixtures; a fourth independently repeated the stale-evidence case after a fixture cache issue was corrected. File hashes and test counters verified mutation and rerun behavior. No observed skill failure required changing v2.0.0. See the [full report and limitations](tests/results/2026-10-19/REPORT.md) and [recorded observations](tests/results/2026-10-19/observations.json).
+
+To reproduce, use Python 3.7+ to run `python tests/create_fixtures.py <new-directory>`, have an agent perform each case request without seeing the acceptance criteria, then run `python tests/audit_run.py <fixture-directory>`. The auditor checks file state, not semantic correctness; the report describes the manual grading procedure. These optional evaluation scripts use only the Python standard library.
 
 When the Codex `skill-creator` validator is installed, run its `scripts/quick_validate.py` against this directory. This checks the skill's structure; it does not establish review quality. For behavioral evaluation, give an agent a scenario and only its input artifacts, then compare its actions and conclusion with the acceptance criteria. Keep external actions disabled for these fixtures.
 
@@ -116,4 +124,6 @@ Final Check 用于回答：**这件事是否已具备进入下一步的条件，
 
 示例：`$final-check 帮我检查这份交付是否满足原始要求，只报告影响使用的问题；已经验证且输入未变的项目不要重复测试。`
 
-适用于代码、科研结果、申请材料、邮件草稿、文档和界面交付。具体深度取决于任务风险，不机械套用全部检查项。此版本的优化来自工作流设计调整，并非已完成的模型性能对比实验。
+适用于代码、科研结果、申请材料、邮件草稿、文档和界面交付。具体深度取决于任务风险，不机械套用全部检查项。
+
+2026-10-19 已实际执行 11 个隔离行为验收场景，全部符合验收标准，并对修正后的过期证据夹具进行了独立复测。发现并修好了测试工具的字节码缓存干扰与 Windows 路径比较问题；未发现需要修改 skill 规则的行为缺陷。完整记录见[实测报告](tests/results/2026-10-19/REPORT.md)。这是一次合成场景验收，不是跨模型或新旧版本的性能对比实验。

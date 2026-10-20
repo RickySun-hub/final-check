@@ -2,6 +2,8 @@
 
 These fixtures evaluate decisions, not exact wording. Use isolated local artifacts and disable external mutations. They are not an automated test suite or a record of model runs.
 
+For executable fixture preparation and the observed 2026-10-19 run, see [the evaluation report](results/2026-10-19/REPORT.md). The table below remains the acceptance specification; keep it separate from inputs given to the agent being evaluated.
+
 For an independent run, provide only the request and input column to the reviewing agent, plus SKILL.md. Keep acceptance criteria with the evaluator.
 
 | Case | Request and input | Acceptance criteria |
