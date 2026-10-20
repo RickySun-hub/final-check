@@ -1,66 +1,80 @@
 # Final Check
 
-**Know what is ready, what is missing, and what the evidence actually proves.**
+**A small, on-demand review convention for evidence, scope, and readiness.**
 
-Final Check is a lightweight agent skill for reviewing a task before its next meaningful step: handing over a file, using a research result, submitting an application, or releasing a code change. It prioritizes consequential omissions and unsupported completion claims, while allowing a clean result when no material issue is found.
+Final Check helps an agent review whether work is ready for its intended next step. It keeps attention on active requirements, supporting evidence, authorized corrections, and material gaps. A clean review is a valid result.
 
-The skill is model-version independent. It gives capable models decision criteria, evidence boundaries, and a stopping rule rather than a rigid checklist. It does not promise perfect reviews or replace domain expertise.
+**Current release: v2.1.0 — the tested slim instructions, explicit invocation only.** The instruction body is identical to the slim candidate used in the Astra study; only version metadata was added. It is not presented as a necessary reasoning upgrade for strong models.
 
-[中文说明](#中文说明) · [Usage](#usage) · [Installation](#installation) · [Evaluation](#evaluation)
-
-## What changed in v2
-
-| Earlier approach | v2 behavior |
-| --- | --- |
-| Start by treating the user as potentially overconfident | Assess the artifact and completion claim without assuming the user is wrong |
-| Walk through broad review categories | Select checks that can affect the intended outcome |
-| Identify missing tests | Ask what evidence is needed; reuse applicable results |
-| Always fill a fixed report template | Give a short, evidence-bounded conclusion; expand only for material findings |
-| Recommend another step | Stop when remaining checks are unlikely to change the decision |
-| Leave review/fix scope implicit | Review is read-only unless fixes are already authorized |
+[中文说明](#中文说明) · [Usage](#usage) · [Scope](#scope) · [Astra comparison](#astra-comparison) · [Installation](#installation)
 
 ## Usage
 
-Invoke it explicitly with a concrete target and next step:
+Invoke the skill when you want a deliberate completion review:
 
 ```text
-$final-check Review this change before I open a PR. Focus on the requested
-behavior and regressions. Review only; do not edit files.
+$final-check Review this change before handoff. Check the active requirements
+and material evidence gaps. Review only; do not edit files.
 ```
 
 ```text
-$final-check Check this report before handoff. Verify required sections,
-numerical claims, the exported PDF, and the final file link.
+$final-check 检查这份交付是否满足最终要求。范围内已经授权的修复直接完成，
+仍然适用的验证不要重复运行，只报告影响下一步的重要问题。
 ```
 
-```text
-$final-check Review the implementation and fix confirmed issues within
-the existing scope. Reuse checks whose relevant inputs have not changed.
+The Codex invocation policy in `agents/openai.yaml` is:
+
+```yaml
+policy:
+  allow_implicit_invocation: false
 ```
 
-Natural-language requests such as “final check,” “what am I missing?” or “最后检查一下，看看有没有重要遗漏” also match its description when the host supports skill discovery. It is not intended to become a mandatory gate for every ordinary task.
+This keeps the skill available through explicit `$final-check` invocation without implicitly adding its instructions to ordinary tasks. The policy depends on host support; other agents may interpret skill metadata differently. Global skill enablement and unrelated configuration are not changed by this repository.
 
-### Example result
+## Scope
 
-> Not yet ready for the report's claimed result. The job log confirms completion, but the plotted output belongs to an older configuration. Regenerate the plot from the matching output and verify its metadata. No new compute job is justified by this finding alone.
+Use it when a requested review benefits from a shared convention: recover the final requirements, inspect the actual deliverables, distinguish a defect from an evidence gap, and give a bounded readiness conclusion. Examples include code handoff, reports, research screening, application materials, and message drafts.
 
-For a clean review:
+It can reuse valid checks and perform corrections that the user already authorized. Reviewing alone does not authorize edits, sending, deployment, sensitive-data access, destructive work, or spending.
 
-> Ready for document handoff within the reviewed scope. The requested sections are present, the PDF renders correctly, and its delivery link points to the checked file. Numerical source data was supplied by you and was not independently audited.
+Do not use it as a mandatory gate for every task. It supplies instructions, not an evidence database, test runner, scientific validator, or external-service verification. It cannot recover inaccessible information or establish facts from a passing intermediate step alone. Strong models may already exhibit the same behavior without it.
 
-These are illustrative outputs, not records of executed reviews.
+The intended benefit is a consistent review convention with little extra instruction text. Improved accuracy, lower cost, faster execution, and universal compatibility are **not established**.
 
-## How it works
+## Astra comparison
 
-The agent recovers the user's requirements, examines the relevant artifact, and tests consequential completion claims against evidence. It distinguishes demonstrated defects from missing evidence and optional improvements, then selects the smallest permitted verification that could change the decision.
+On 2026-10-19, a local study compared **no added skill**, the **slim candidate**, and **v2.0.0**, explicitly requesting `gpt-6-astra` for execution. It used six compound scenarios, three rounds, and three conditions: **54 scenario requests**. Inputs were byte-identical across conditions; the added review instructions were the intended difference.
 
-Findings explain the requirement, evidence, consequence, and remedy. The conclusion is scoped to the next step: ready, ready with limitations, or not yet ready. No mandatory headings, issue quota, numeric score, or repeated test suite is required.
+| Observed measure | No skill | Slim candidate | v2.0.0 |
+| --- | ---: | ---: | ---: |
+| Cases meeting material acceptance criteria | 18/18 | 18/18 | 18/18 |
+| Required tax-runtime checks, after setup | 3 | 3 | 3 |
+| Unchanged auth/build script reruns | 0/0 | 0/0 | 0/0 |
+| Already-valid package script reruns | 0 | 0 | 0 |
+| Out-of-scope product changes found by file audit | 0 | 0 | 0 |
+| Mean user-response characters | 244.6 | 268.3 | 219.6 |
+| Added skill-file characters in the experiment | 0 | 1,713 | 6,133 |
+
+**No material correctness or workflow advantage was detected for either skill condition in this study.** The slim candidate used 72.1% fewer instruction characters than v2.0.0 without an observed acceptance regression. v2 responses were about 10.2% shorter than no-skill responses; slim responses were about 9.7% longer. Shorter instructions did not imply shorter answers. Character counts are not token, cost, or latency measurements; release version metadata is not included in the candidate's 1,713-character figure.
+
+The scenarios covered evolving requirements and analytical denominators, partially stale verification, constrained research ranking, authorized local fixes alongside inaccessible evidence, a clean handoff with distracting old failures, and restore identity plus approval gaps. Three fresh-context Astra graders scored anonymized round-level bundles against a prespecified rubric and inspected the edited artifacts, with parent file/hash and script-count audits as corroboration.
+
+### What the study does and does not support
+
+- It supports choosing the smaller instructions for **optional consistency**, not claiming that they make Astra more capable.
+- Each condition had three execution sessions; six cases shared a session within a round. The 54 decisions are not 54 fully independent statistical samples. No significance or equivalence claim is made.
+- Cases were synthetic and clearly scoped. All conditions scored at the ceiling; harder real-world failures could differentiate them.
+- “No skill” meant no additional skill body. All conditions retained the same Codex platform instructions, permissions, and tool environment. Automatic skill discovery was not tested.
+- Model selection was specified in the tool calls; no provider-side model attestation or explicit reasoning-effort override was recorded. Execution and grading used the same model family, so shared blind spots remain possible.
+- Records contain command summaries, not complete tool traces. Script counters cover the supplied scripts, and filesystem audits do not independently prove the absence of every possible external action.
+
+Evidence: [full report](tests/results/astra-2026-10-19/REPORT.zh-CN.md), [summary and scores](tests/results/astra-2026-10-19/summary.json), [54 observation records](tests/results/astra-2026-10-19/observations.json), [prespecified rubric](tests/results/astra-2026-10-19/rubric.md), and [reproduction inputs](tests/results/astra-2026-10-19/experiment-inputs.zip). The report preserves the historical state before promotion; v2.1.0 is the subsequent release decision.
 
 ## Installation
 
-This repository is the skill folder: keep `SKILL.md` and `agents/openai.yaml` together. Install it as a directory named `final-check` inside your host's configured skills directory. For Codex setups using `CODEX_HOME`, the target is `$CODEX_HOME/skills/final-check`; if unset, the conventional location is `~/.codex/skills/final-check`.
+Keep `SKILL.md` and `agents/openai.yaml` together in a directory named `final-check` inside the host's configured skills directory. The YAML file carries the explicit-only invocation policy; copying only `SKILL.md` does not install that policy.
 
-PowerShell, for a new installation:
+For a new Codex installation in PowerShell:
 
 ```powershell
 $skillHome = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $HOME '.codex' }
@@ -71,59 +85,23 @@ if (Test-Path -LiteralPath $skillTarget) {
 git clone https://github.com/RickySun-hub/final-check.git $skillTarget
 ```
 
-For an existing installation, compare the files first, preserve local customizations, and replace only the intended skill files after backing them up. Refresh skill discovery or start a new session as required by your host. This repository does not change global skill enablement or other configuration.
+For an update, compare existing files, back up local customizations, and update the two runtime files together. Refresh skill discovery or start a new session as required by the host. The skill itself requires no API key, package installation, external service, or mandatory delegation. Optional experiment scripts use Python's standard library.
 
-The skill itself needs no API key, package install, script runner, or external service. A review may need tools appropriate to its target; unavailable evidence must remain explicitly unverified. Other agents that support `SKILL.md` may be able to use it, but cross-host compatibility has not been established here.
+## Validation and history
 
-## Files
+The skill's structural validator checks metadata and format; it does not prove review quality. For the Astra experiment, use the instructions in the archived input package and keep the rubric away from the agent being evaluated. Checks that only confirm a file's format are not behavioral test passes.
 
-```text
-final-check/
-├── SKILL.md              Agent instructions and version metadata
-├── agents/openai.yaml    Display metadata and suggested invocation
-├── README.md             Human-facing usage and installation guide
-└── tests/
-    ├── scenarios.md         Behavioral cases and acceptance criteria
-    ├── create_fixtures.py   Isolated fictional inputs and baseline checks
-    ├── audit_run.py         Post-run file and test-count audit
-    └── results/             Dated observations and evaluation reports
-```
+- **v2.1.0:** adopts the exact tested slim instruction body and sets explicit-only invocation. No fresh 54-case rerun is claimed for the added version metadata or invocation setting; body equivalence, YAML policy, and structural checks validate that promotion separately.
+- **v2.0.0:** introduced explicit evidence/scope/stopping rules. Its earlier [11-scenario acceptance run](tests/results/2026-10-19/REPORT.md) passed; that run did not independently identify its model and should not be attributed to Astra. The [earlier scenarios](tests/scenarios.md), generator and auditor remain for historical regression work. Running the generator against the current checkout uses the current skill, not a frozen v2 body.
 
-## Boundaries
-
-- A review is read-only unless the user also authorizes corrections.
-- Existing permission stays valid; invoking the skill does not authorize deployment, spending, messages, destructive actions, or new sensitive-data access.
-- Current evidence matters. A passing build is not proof of a live integration, and a completed job is not proof of a valid scientific result.
-- Findings are bounded by inspected evidence. Inaccessible data is unknown, and no findings does not guarantee the absence of all defects.
-- No automatic delegation, model switching, or paid evaluation is required.
-
-## Evaluation
-
-[Behavioral scenarios](tests/scenarios.md) cover clean reviews, stale evidence, critical unknowns, review-only boundaries, authorized repairs, and changing requirements. They are reusable evaluation fixtures, not a claim of benchmark performance.
-
-**2026-10-19 acceptance run: 11/11 scenarios met the criteria.** Three fresh-context subagents reviewed grouped local fixtures; a fourth independently repeated the stale-evidence case after a fixture cache issue was corrected. File hashes and test counters verified mutation and rerun behavior. No observed skill failure required changing v2.0.0. See the [full report and limitations](tests/results/2026-10-19/REPORT.md) and [recorded observations](tests/results/2026-10-19/observations.json).
-
-To reproduce, use Python 3.7+ to run `python tests/create_fixtures.py <new-directory>`, have an agent perform each case request without seeing the acceptance criteria, then run `python tests/audit_run.py <fixture-directory>`. The auditor checks file state, not semantic correctness; the report describes the manual grading procedure. These optional evaluation scripts use only the Python standard library.
-
-When the Codex `skill-creator` validator is installed, run its `scripts/quick_validate.py` against this directory. This checks the skill's structure; it does not establish review quality. For behavioral evaluation, give an agent a scenario and only its input artifacts, then compare its actions and conclusion with the acceptance criteria. Keep external actions disabled for these fixtures.
-
-No model-version comparison or measured accuracy improvement is claimed. Future changes should address observed review failures without adding universal rituals.
+Future changes should address demonstrated failures or add useful evidence-handling capabilities, rather than accumulate generic review reminders.
 
 ## 中文说明
 
-Final Check 用于回答：**这件事是否已具备进入下一步的条件，还有什么会影响结果的重要遗漏？**
+当前正式版是 **v2.1.0 精简版，仅按需调用**。使用 `$final-check` 明确发起复查；不把它作为日常任务的强制前置步骤。安装时要同时保留 `SKILL.md` 与 `agents/openai.yaml`，后者设置了 `allow_implicit_invocation: false`。
 
-新版重点是减少无效流程，同时提高结论的证据要求：
+它适合需要统一审查口径的场合：核对最终要求、实际交付物和验证证据，区分真实缺陷与未知，完成已有授权范围内的修复，并在重要问题处理完后停止。它不会自动提供额外事实、执行所有领域检查或扩大操作授权。
 
-- 不默认用户判断错误，也不为了显得认真而强行找问题。
-- 区分真实缺陷、关键证据不足和可选优化。
-- 已有验证仍适用时复用；只有相关变化、失败或未解决风险才补测。
-- 单纯审查默认只读；已授权修复的任务可以继续完成范围内的修改。
-- 有明确停止条件；检查完重要要求即可交付，不无限追求满分。
-- 可以给出“未发现重要问题”，但要说明检查范围和影响判断的限制。
+**Astra 实测没有显示额外的正确率或流程收益。** 在六类复合场景、三个条件、三轮共 54 次请求中，无 skill、精简版和旧 v2 均为 18/18 通过；测试复用和授权修改也没有拉开差距。选择精简版，是为了保留可选的工作约定，同时比旧 v2 减少约 72% 的指令字符，而不是宣称能增强 Astra 的推理能力。
 
-示例：`$final-check 帮我检查这份交付是否满足原始要求，只报告影响使用的问题；已经验证且输入未变的项目不要重复测试。`
-
-适用于代码、科研结果、申请材料、邮件草稿、文档和界面交付。具体深度取决于任务风险，不机械套用全部检查项。
-
-2026-10-19 已实际执行 11 个隔离行为验收场景，全部符合验收标准，并对修正后的过期证据夹具进行了独立复测。发现并修好了测试工具的字节码缓存干扰与 Windows 路径比较问题；未发现需要修改 skill 规则的行为缺陷。完整记录见[实测报告](tests/results/2026-10-19/REPORT.md)。这是一次合成场景验收，不是跨模型或新旧版本的性能对比实验。
+这不是“所有真实任务都无用”的结论：样本是合成任务，目标明确，存在满分上限；同轮六案共享上下文，平台基础规则也始终存在。未测量实际 token、费用或延迟。正式正文与本次测试候选完全相同，仅增加版本元数据并设置显式调用策略；历史报告和原始记录保留，便于核查。

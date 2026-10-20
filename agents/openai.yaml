@@ -2,3 +2,5 @@ interface:
   display_name: "Final Check"
   short_description: "Assess readiness using evidence and material gaps"
   default_prompt: "Use $final-check to assess whether this is ready for the intended next step, verify material uncertainties, and report only consequential gaps and limitations."
+policy:
+  allow_implicit_invocation: false

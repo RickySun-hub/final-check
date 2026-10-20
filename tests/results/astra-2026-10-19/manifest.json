@@ -1,0 +1,93 @@
+{
+  "model_requested": "gpt-6-astra",
+  "reasoning_override": null,
+  "conditions": {
+    "elm": "none",
+    "oak": "slim",
+    "ash": "v2"
+  },
+  "rounds": 3,
+  "orders": [
+    [
+      "H1",
+      "H2",
+      "H3",
+      "H4",
+      "H5",
+      "H6"
+    ],
+    [
+      "H3",
+      "H4",
+      "H5",
+      "H6",
+      "H1",
+      "H2"
+    ],
+    [
+      "H5",
+      "H6",
+      "H1",
+      "H2",
+      "H3",
+      "H4"
+    ]
+  ],
+  "skill_hashes": {
+    "elm": null,
+    "oak": "c0671cce03b4f3d8d2eacb70e67b8693965c6e0362df9774a0acc01b43c13eda",
+    "ash": "6e401eb50c10c2d7163acf025ac77432e1f0e125009074fc7074e499dabbfa38"
+  },
+  "seed_hashes": {
+    "H1/analyst-notes.txt": "ec628cc59929b169bdbdb641199d151bb752e3d32a0f599a1eaf938a19e3e4ee",
+    "H1/conversation.txt": "7e6be85ae1aed67489b647db1297220c544a3ccc649fe6db133689d5fd09a6cc",
+    "H1/request.txt": "aed21ebdc9fdfc4d5cd68d3f13f68296513a506b2504e1021591a99733bdd7da",
+    "H1/source.csv": "1bbafad9acd3c272989eeb94b76446a6a220f988084a1cc0b24137a02207c0ab",
+    "H1/delivery/export.csv": "78ddb68c8244805c46fb740a565d1a0bf7eb194f4dde57a325ac8f22683f6b18",
+    "H1/delivery/report.md": "df84756d5768ee8a8e0f8fc1113aae7ef5135b50863ea5d6d91890d13b06cf3e",
+    "H2/auth.json": "1d1613d1be08eba0928e3a8e14b52c8e702893da5be4e736c459076f4e507445",
+    "H2/auth.py": "170341cf9a15c3ba73c2d6e7d4a8bdac319aea73c2d12cfce6d5cf1b2a6d565a",
+    "H2/change-log.txt": "bf0afade61afd2e31cd021fba0bdaff646b0276631e11f3ac5defe432f88c863",
+    "H2/check-events.jsonl": "b2bcc65822619488382b9ae44160429dceccbdb26378d4f283a8a8704bc5e260",
+    "H2/checks.py": "854654d1b6676bdb9a74f8189d3398cfc022f36bef3e7f2a6d1bfa2558f8ca3e",
+    "H2/local-acceptance.txt": "a6b3fbb44822f7e8c354aafa4ce86d4f28935a33a468ebbe0f03ab86da9f64fd",
+    "H2/pricing.py": "78ab56d6f83064d2aee403dc52c3800f4874806e26c9ac181fae0b354e9e661a",
+    "H2/README.md": "aea09b33809f6f2ffb041a47eba968bc7d7d64252e7e2db3b3f036ea131c2efd",
+    "H2/request.txt": "ec9bfbb6cfaa6942dcd7a781b0f6f1d7a15c780f3e32052cc475257101bc649e",
+    "H2/tax.json": "621b9217a114d7286136044dd6f70a92fb5da056d7ab6ce1eb299a002228a83f",
+    "H2/verification.json": "8d0c082e2ed068d18f7120d0e92f6f0ac1c9f36c25c16a45531329f52f0b9e37",
+    "H3/candidates.csv": "d84f0c13fe1000de744f383385bbcc14746ae8e643bea2b0d85e2a517cf11bc3",
+    "H3/criteria.json": "b6af033af967f41d7ef223f9b868ca1ab62cd42e4e45de36bb5a0a2fcdd4ffd4",
+    "H3/job.log": "51e11e1a6fc714839c9d5e524d1844ee2ef8f9e0c9758a50fab0c9a5e959b618",
+    "H3/notes.txt": "20b44f8276d30a07363baffa9bb81388bb2f94d3f0ca29a6b057b84d78e4a402",
+    "H3/request.txt": "6ddeca6dde60b1e86e49d074410f0f281d5b236d3006bfc89719e574cd61c5a5",
+    "H3/screening.md": "2910083eccf6817b7c6b7732e436e7ed49ec23f36ef120dba434b89c1d311152",
+    "H4/access-evidence.txt": "0a454eca6a91d392812a2419117cf51cbb64dac425fe528cee01816c407e4218",
+    "H4/approved-requirements.txt": "38b8ec280570e8eec53407d57b85e266cf832a4e39f5937e47a3940276ce794c",
+    "H4/draft.md": "7f6d24527b820f9d4a064522878276b4ca6b5e5e98dea6a8509e58ce9672d6fb",
+    "H4/readiness.md": "8e355d6b53ab27f840537d7d33f37e0ea0ef3c7ffea8c6dad79d5e9c08adcece",
+    "H4/request.txt": "7896caee81664940fa63150dcd2cb1b395ea0a222947c605675104808039539e",
+    "H4/summary-v1.md": "43f952391842d1cfca860512fee97f6c69d6929e39799baeb0633c717f68efc3",
+    "H4/summary-v2.md": "7aae0d8c64ce56c5fe3cb91053c2aabfd15c359f15c182a545aa753ea314e1ed",
+    "H4/vendor-note.txt": "bd9b12fd5e07b1814d4575f1733d04252c205eee139156a2025b040603a33e79",
+    "H5/acceptance.txt": "0a0a5de60c85f1ac5b8e3d3d00ec194e29973dcff53650c4d319065457c065c2",
+    "H5/check-events.jsonl": "1ab2c965142d392fb773f294ef73f479f0280e0e710298c8e6601223c972f9d8",
+    "H5/check.py": "b0ddb99ad99ad2d67cc09a2d373b7f4ccecde3054abd7d20a7b84b4f8825591a",
+    "H5/conversation.txt": "a0da1d507e563c650f245d79e852a582c74d9a819f7aadb0253b65f4386918ad",
+    "H5/data.csv": "d983cbe00ab74cb2115aff077b06bf2cf35164db8d61a8af7a019128f6fc5985",
+    "H5/old-check.log": "98156d749be0dac542441a3bc4599aeb923f825c3bc0457d582a746916ab438d",
+    "H5/package-note.txt": "d3858b8884d4a4f24f0cca44420c36f238df623b1b18c1f0c484b80cc399337f",
+    "H5/report.md": "6f8d0363959db96fb1d61206499b65fa26f3cdde38173043ce71f3cd1716deff",
+    "H5/request.txt": "dd436d4c2b3bc57b66ca54e32d2c2d33320cddb20d1c7f8105a4fd694e91d1ce",
+    "H5/reviewer-note.txt": "8bf98e601587f298aae6e0c63a194796de27bdb1338c4b7da0a391bff371ad47",
+    "H5/source.csv": "d983cbe00ab74cb2115aff077b06bf2cf35164db8d61a8af7a019128f6fc5985",
+    "H5/verification.json": "b52a778ade596cb155e40f9edf7ac7db7e7f772f33943ddb1c455ad8cb6e0160",
+    "H6/acceptance.txt": "765af672679f4636bd4409ce463b17fdd0217e6a4e338bb89914ce20efc62d62",
+    "H6/approval.txt": "d98594c3a80cb723a1f4afcd869dd17831cd0d462a4757423e06a046ee6741a3",
+    "H6/archive-index.txt": "745d51fe573da29d3f904c1eb4972ad649dd360ae5b1fd816f703d1fc3006eda",
+    "H6/backup.json": "ba647d44865027d3b53f4205ad4c9e3b1b7ab15e005ed8ba6c83a321a12ef51b",
+    "H6/readiness.md": "4d4d728f638e1fca292855dd2e115e9c0a933f1f5f1d4113ab3e935b5beae7d3",
+    "H6/request.txt": "06c8a4f1e0613099ce1e0c20a5177ee55d6499ef7a2310b90b41732ce9c61536",
+    "H6/restore.log": "337a7837025536579ca9072a908f999113dcc1335b5fcc57fa9d6195f3e53f80"
+  }
+}
